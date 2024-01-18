@@ -54,7 +54,7 @@ app.post('/players/', async (request, response) => {
 })
 
 //3.API to get a player based on id
-app.get('/players/:playerId', async (request, response) => {
+app.get('/players/:playerId/', async (request, response) => {
   const {playerId} = request.params
   const getPlayerQuery = `
     SELECT * FROM cricket_team WHERE player_id='${playerId}'
