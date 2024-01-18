@@ -4,6 +4,7 @@ const sqlite3 = require('sqlite3')
 const path = require('path')
 
 const app = express()
+app.use(express.json())
 const dbPath = path.join(__dirname, 'cricketTeam.db')
 
 let db = null
@@ -30,11 +31,12 @@ initializeDbAndServer()
 
 //1.API to get all players
 app.get('/players/', async (request, response) => {
-  const playerDetailsQuery = `
+  const playersDetailsQuery = `
     SELECT * FROM cricket_team
   `
-  const playerDetails = await db.all(playerDetailsQuery)
-  response.send(playerDetails)
+  const playersDetails = await db.all(playersDetailsQuery)
+  console.log(playersDetails)
+  response.send(playersDetails)
 })
 
 //2.API to add a new player
@@ -46,7 +48,8 @@ app.post('/players/', async (request, response) => {
     INSERT INTO cricket_team (player_name,jersey_number,role) 
     VALUES ('${playerName}','${jerseyNumber}','${role}')
   `
-  await db.run(addNewPlayerQuery)
+  const newPlayer = await db.run(addNewPlayerQuery)
+  console.log(newPlayer)
   response.send('Player Added to Team')
 })
 
@@ -57,6 +60,7 @@ app.get('/players/:playerId', async (request, response) => {
     SELECT * FROM cricket_team WHERE player_id='${playerId}'
   `
   const playerDetails = await db.get(getPlayerQuery)
+  console.log(playerDetails)
   response.send(playerDetails)
 })
 
@@ -83,3 +87,5 @@ app.delete('/players/:playerId/', async (request, response) => {
   await db.run(deleteQuery)
   response.send('Player Removed')
 })
+
+module.exports = app
